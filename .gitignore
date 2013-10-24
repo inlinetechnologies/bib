@@ -1,0 +1,8 @@
+conf
+logs
+docroot/dbm/
+docroot/i/_mbox/
+docroot/i/_skins/
+docroot/i/upload
+docroot/session_access_logs/
+fcgi.pl
