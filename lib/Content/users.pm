@@ -2,6 +2,18 @@
 
 ################################################################################
 
+sub do_create_users { # И что это за процедура?
+
+	$_REQUEST {id} = sql_do_insert (users => {
+		id_level  => 1,
+	});
+
+}
+
+
+
+################################################################################
+
 sub do_unmark_users {
 
 	sql_do ('UPDATE users SET id_user_client = NULL WHERE id = ?', $_USER -> {id});
@@ -78,18 +90,22 @@ sub select_users { # Люди
 	sql (
 	
 		add_vocabularies ({},
-#			users => {},
+			levels => {},
 		),
 		
 		users => [
 	
-#			'id_user',
+			'id_level',
+			'is_lib',
+			'is_mgr',
 			
 			['UPPER(label) LIKE %?%' => $i18n -> uc ($_REQUEST {q}) || undef],
 			
 			[ LIMIT => 'start, 50'],
 		
 		],
+		
+		'levels',
 					
 	);
 	

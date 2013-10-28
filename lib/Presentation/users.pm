@@ -165,6 +165,9 @@ sub draw_users {
 			[
 				'¹',
 				'ÔÈÎ',
+				'Óğîâåíü',
+				'Áèáëèîòåêàğü ëè',
+				'Ìåíåäæåğ ëè',
 			],
 
 			sub {
@@ -177,6 +180,9 @@ sub draw_users {
 	
 					$i -> {id},
 					$i -> {label},
+					$i -> {level} -> {label},
+					($i -> {is_lib} ? 'áèáëèîòåêàğü' : ''),
+					($i -> {is_mgr} ? 'ìåíåäæåğ' : ''),
 
 				])
 
@@ -214,12 +220,24 @@ sub draw_users {
 						keep_params => [],
 					},
 
-#					{
-#						type   => 'input_select',
-#						name   => 'id_...',
-#						values => $data -> {...},
-#						empty  => '[Âñå ...]',
-#					},
+					{
+						type   => 'input_select',
+						name   => 'id_level',
+						values => $data -> {levels},
+						empty  => '[Âñå óğîâíè]',
+					},
+					
+					{
+						type   => 'input_checkbox',
+						name   => 'is_lib',
+						label  => 'Òîëüêî áèáëèîòåêàğè',
+					},
+					
+					{
+						type   => 'input_checkbox',
+						name   => 'is_mgr',
+						label  => 'Òîëüêî ìåíåäæåğû',
+					},
 
 					{
 						type    => 'pager',

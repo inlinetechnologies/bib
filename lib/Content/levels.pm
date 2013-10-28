@@ -1,39 +1,40 @@
 
+
 ################################################################################
 
-sub do_update_rubrics {
+sub do_update_levels {
 
-	$_REQUEST {_label} or die "#_label#:Вы забыли ввести наименование";
+	$_REQUEST {_label}             or die "#_label#:Вы забыли ввести наименование";
+	$_REQUEST {_amount} =~ /^\d+$/ or die "#_amount#:Число книг должно быть положительным";
+	$_REQUEST {_days}   =~ /^\-?\d+$/ or die "#_days#:Число дней должно быть числом";
 	
 	do_update_DEFAULT ();
-	
-	esc ();
 
 }
 
 ################################################################################
 
-sub get_item_of_rubrics {
+sub get_item_of_levels {
 
-	my $data = sql ('rubrics');
+	my $data = sql ('levels');
 
-#	$data -> {no_del} ||= 1 if $data -> {id_user} != $_USER -> {id};
+	$data -> {no_del} ||= 1 if !$_USER -> {is_mgr};
 
 	$_REQUEST {__read_only} ||= !($_REQUEST {__edit} || $data -> {fake} > 0);
-
+	
 	return $data;
 
 }
 
 ################################################################################
 
-sub select_rubrics { # Рубрики
+sub select_levels { # Уровни доверия
 
 	sql (
 	
 		{},
 		
-		rubrics => [
+		levels => [
 				
 			['UPPER(label) LIKE %?%' => $i18n -> uc ($_REQUEST {q})],
 			
@@ -41,8 +42,8 @@ sub select_rubrics { # Рубрики
 		
 		],
 					
-	);
-	
+	);	
+
 }
 
 1;

@@ -1,8 +1,7 @@
 
-
 ################################################################################
 
-sub draw_books_overdue {
+sub draw_books_decrepit { #
 
 	my ($data) = @_;
 
@@ -11,42 +10,24 @@ sub draw_books_overdue {
 		draw_table (
 
 			[
-				{
-					label  => 'ФИО',
-					order  => 'users.label',
-				},
-				{
-					label  => 'Телефон',
-				},
-				{
-					label  => 'Наименование',
-					order  => 'books.label',
-				},
-				{
-					label  => 'Номер',
-				},
-				{
-					label  => 'Дней',
-					order  => 'dt_to',
-				},
-				
+				'Наименование',
+				'Номер',
+				'Число выдач',
 			],
 
 			sub {
-				
-				my @today = Date::Calc::Today ();
+
+				__d ($i);
 
 				draw_cells ({
 					href => "/?type=books&id=$$i{id}",
 				},[
-
-					$i -> {user} -> {label},
-					$i -> {user} -> {phone},
+	
 					$i -> {title} -> {label},
 					$i -> {no},
 					{
-						label   => (Date::Calc::Delta_Days ((split /\-/, $i -> {dt_to}), @today)),
-						picture => '### ###',
+						label   => $i -> {cnt},
+						picture => '### ### ###',
 					},
 
 				])
@@ -72,12 +53,33 @@ sub draw_books_overdue {
 						target => 1,
 					},
 
+#					{
+#						type  => 'input_text',
+#						label => 'Искать',
+#						name  => 'q',
+#						keep_params => [],
+#					},
+#
+#					{
+#						type   => 'input_select',
+#						name   => 'id_...',
+#						values => $data -> {...},
+#						empty  => '[Все ...]',
+#					},
+
+					{
+						type    => 'pager',
+					},
+
+#					fake_select (),
+
 				],
-				
+
 			}
 
 		);
 
 }
+
 
 1;

@@ -5,6 +5,98 @@ sub select_logon {}
 
 ################################################################################
 
+sub do_execute_ws_logon {
+
+	my $xml = '';
+
+	eval {
+
+		$xml = $r -> post_data ();
+		
+		my $dt_from = '';
+		
+		if ($xml =~ /dt_from>(\d\d\d\d-\d\d-\d\d)</) {
+			$dt_from = $1;
+		}
+		
+		my $titles = sql_select_all (q {
+			SELECT
+				titles.author
+				, titles.label
+				, titles.publishing
+				, titles.year
+				, rubrics.label rubric
+			FROM
+				titles
+				LEFT JOIN rubrics ON titles.id_rubric = rubrics.id
+			WHERE
+				titles.fake = 0
+				AND titles.id IN (
+					SELECT
+						id_title
+					FROM
+						books
+					GROUP BY
+						id_title
+					HAVING
+						MIN(dt) >= ?
+						
+				)
+		}, $dt_from);
+		
+		foreach my $i (@$titles) {
+		
+			foreach my $k (keys %$i) {
+			
+				$i -> {$k} = encode_entities ($i -> {$k}, '<>&"');
+			
+			}
+		
+		}
+	
+		out_html ({},
+	qq {<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:soap="http://example.org/soapformat">
+	   <soapenv:Header/>
+	   <soapenv:Body>
+	      <soap:getNewTitlesResponse>
+@{[ map {<<EOR} @$titles]}
+	         <soap:title>
+	            <soap:label>$_->{label}</soap:label>
+	            <soap:author>$_->{author}</soap:author>
+	            <soap:publishing>$_->{publishing}</soap:publishing>
+	            <soap:rubric>$_->{rubric}</soap:rubric>
+	            <soap:year>$_->{year}</soap:year>
+	         </soap:title>
+EOR
+	      </soap:getNewTitlesResponse>
+	   </soapenv:Body>
+	</soapenv:Envelope>});
+
+	};
+	
+	if ($@) {
+	
+		warn "SOAP body:\n $xml\n\n $@\n";
+		
+		$r -> status (500);
+
+		out_html ({},
+		
+		qq {<env:Envelope xmlns:env="http://www.w3.org/2003/05/soap-envelope">
+			<env:Header/>
+			<env:Body>
+			<env:Fault>
+				<env:Code>ERROR</env:Code>
+			</env:Fault>
+			</env:Body>
+		</env:Envelope>});
+	
+	}
+
+}
+
+################################################################################
+
 sub do_execute_logon {
 
 	$_REQUEST {login} or die "#_login#:Вы забыли ввести имя пользователя";

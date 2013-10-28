@@ -25,22 +25,38 @@ sub select_menu {
 			name  => 'titles',
 			label => 'Книги',
 			items => [
-#				{
-#					name  => 'titles_boring',
-#					label => 'Неинтересные',
-#					off   => !$_USER -> {is_mgr},
-#				},
+				{
+					name  => 'titles_boring',
+					label => 'Неинтересные',
+					off   => !$_USER -> {is_mgr},
+				},
 				{
 					name  => 'books_mint',
 					label => 'Нечитанные',
 					off   => !$_USER -> {is_mgr},
 				},
+				{
+					name  => 'books_decrepit',
+					label => 'Ветхие',
+					off   => !$_USER -> {is_mgr},
+				},
 			],
 		},
 		{
-			name  => 'rubrics',
-			label => 'Рубрики',
-			off   => !$_USER -> {is_mgr},
+			name    => '_vocs',
+			label   => 'Справочники',
+			off     => !$_USER -> {is_mgr},
+			no_page => 1,
+			items => [
+				{
+					name  => 'rubrics',
+					label => 'Рубрики',				
+				},
+				{
+					name  => 'levels',
+					label => 'Уровни',
+				},
+			],
 		},
 
 	];

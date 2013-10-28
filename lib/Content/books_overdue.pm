@@ -1,4 +1,29 @@
 
+################################################################################
+
+sub do_mail_books_overdue {
+
+	my ($books, $users) = sql_select_array (q {
+	
+		SELECT
+			COUNT(id)
+			, COUNT(DISTINCT id_user)
+		FROM
+			books		
+		WHERE
+			fake = 0
+			AND id_user > 0
+			AND dt_to   < current_date
+	
+	});
+	
+	send_mail ({
+		to           => sql (users => [[is_mgr => 1]]),
+		subject      => '—писок должников',
+		text         => "¬ насто€щее врем€ количество просроченных книг - $books, число же должников - $users. http://$preconf->{mail}->{server_name}/?type=books_overdue",
+	});
+
+}
 
 ################################################################################
 

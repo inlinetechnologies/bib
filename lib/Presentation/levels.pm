@@ -2,7 +2,7 @@
 
 ################################################################################
 
-sub draw_item_of_rubrics {
+sub draw_item_of_levels {
 
 	my $data = __d ($_[0]);	
 
@@ -15,8 +15,8 @@ sub draw_item_of_rubrics {
 			no_edit => $data -> {no_del},
 			
 			path => [
-				{type => 'rubrics', name => action_type_label},
-				{type => 'rubrics', name => $data -> {label}, id => $data -> {id}},
+				{type => 'levels', name => action_type_label},
+				{type => 'levels', name => $data -> {label}, id => $data -> {id}},
 			],
 			
 		},
@@ -24,24 +24,31 @@ sub draw_item_of_rubrics {
 		$data,
 		
 		[
+
 			{
 				name    => 'label',
 				label   => 'Наименование',
 				size    => 40,
 				max_len => 255,
 			},
+			{
+				name    => 'amount',
+				size    => 5,
+			},
+			{
+				name    => 'days',
+				size    => 5,
+			},
 
 		],
 
 	)
 
-	;
-
 }
 
 ################################################################################
 
-sub draw_rubrics {
+sub draw_levels {
 
 	my ($data) = @_;
 
@@ -51,6 +58,8 @@ sub draw_rubrics {
 
 			[
 				'Наименование',
+				'Максимум книг',
+				'Максимальная длительность',
 			],
 
 			sub {
@@ -58,16 +67,24 @@ sub draw_rubrics {
 				__d ($i);
 
 				draw_cells ({
-					href => "/?type=rubrics&id=$$i{id}",
+					href => "/?type=levels&id=$$i{id}",
 				},[
 	
 					$i -> {label},
+					{
+						label => $i -> {amount},
+						picture => '###',
+					},
+					{
+						label => $i -> {days},
+						picture => '###',
+					},
 
 				])
 
 			},
 
-			$data -> {rubrics},
+			$data -> {levels},
 
 			{
 				
@@ -82,16 +99,16 @@ sub draw_rubrics {
 					{
 						icon  => 'create',
 						label => '&Добавить',
-						href  => '?type=rubrics&action=create',
+						href  => '?type=levels&action=create',
 					},
-
+					
 					{
 						type  => 'input_text',
 						label => 'Искать',
 						name  => 'q',
 						keep_params => [],
 					},
-					
+
 					{
 						type    => 'pager',
 					},
@@ -105,5 +122,6 @@ sub draw_rubrics {
 		);
 
 }
+
 
 1;
