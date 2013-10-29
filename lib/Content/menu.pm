@@ -18,7 +18,7 @@ sub select_menu {
 		
 		($_USER -> {id_user_client} ? {
 			href  => "/?type=users&id=$_USER->{id_user_client}",
-			label => sql ('users(label)' => $_USER->{id_user_client}),
+			label => 'Мой клиент (' . sql ('users(label)' => $_USER->{id_user_client}) . ')',
 		} : ()),
 		
 		{
